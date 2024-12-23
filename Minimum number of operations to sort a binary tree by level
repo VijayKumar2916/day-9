@@ -1,0 +1,49 @@
+#You are given the root of a binary tree with unique values.
+
+# In one operation, you can choose any two nodes at the same level and swap their values.
+
+# Return the minimum number of operations needed to make the values at each level sorted in a strictly increasing order.
+
+# The level of a node is the number of edges along the path between it and the root node.
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def minimumOperations(self, root):
+        if not root:
+            return 0
+        ans=0
+        q=deque([root])
+
+        while q:
+            level=[]
+            for _ in range(len(q)):
+                node = q.popleft()
+                level.append(node.val)
+
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            ans +=self.countSwaps(level)
+        return ans
+    def countSwaps(self,level):
+        n=len(level)
+        sorted_level=sorted(level)
+        index_map={val:i for i,val in enumerate(level)}
+        swaps=0
+         
+        for i in range(n):
+            while level[i] != sorted_level[i]:
+                correct_index = index_map[sorted_level[i]]
+
+                index_map[level[i]]==correct_index
+                index_map[level[correct_index]]=i
+
+                level[i],level[correct_index]=level[correct_index],level[i]
+            swaps+=1
